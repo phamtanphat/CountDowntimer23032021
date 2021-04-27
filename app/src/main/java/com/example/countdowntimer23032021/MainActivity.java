@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     ImageSwitcher mImageSwitcher;
     Button mBtnStart;
     String[] mArrNameImages = {"hinh1","hinh2","hinh3","hinh4","hinh5"};
+    int mCount = 0;
+    CountDownTimer mCountDownTimer ;
+    boolean mIsRunning;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public View makeView() {
                 ImageView imageView = new ImageView(MainActivity.this);
-                int idImage = getResources().getIdentifier(mArrNameImages[0],"drawable",getPackageName());
+                int idImage = getResources().getIdentifier(mArrNameImages[mCount],"drawable",getPackageName());
                 imageView.setImageResource(idImage);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 return imageView;
@@ -37,22 +41,37 @@ public class MainActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CountDownTimer countDownTimer = new CountDownTimer(5200 , 1000) {
-                    @Override
-                    public void onTick(long l) {
-                        if ( l >= 1000){
-//                            mImageSwitcher.setImageResource();
+                if (!mIsRunning){
+                    mIsRunning = true;
+                    mCountDownTimer = new CountDownTimer(1200, 1000) {
+                        @Override
+                        public void onTick(long l) {
+                            if ( l >= 1000){
+                                if (mCount >= mArrNameImages.length){
+                                    mCount = 0;
+                                }
+                                int idImage = getResources().getIdentifier(mArrNameImages[mCount],"drawable",getPackageName());
+                                mImageSwitcher.setImageResource(idImage);
+                                mCount++;
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFinish() {
+                        @Override
+                        public void onFinish() {
+                            this.start();
+                        }
+                    };
 
-                    }
-                };
-
-                countDownTimer.start();
+                    mCountDownTimer.start();
+                }
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mCountDownTimer.cancel();
+        mCountDownTimer = null;
     }
 }
