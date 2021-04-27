@@ -2,10 +2,13 @@ package com.example.countdowntimer23032021;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
@@ -28,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
         mImageSwitcher = findViewById(R.id.imageSwitcher);
         mBtnStart = findViewById(R.id.buttonStart);
 
+        Animation animationIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        Animation animationOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+
         mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -38,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 return imageView;
             }
         });
+        mImageSwitcher.setInAnimation(animationIn);
+        mImageSwitcher.setOutAnimation(animationOut);
+
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
